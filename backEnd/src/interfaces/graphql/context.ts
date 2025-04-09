@@ -1,8 +1,8 @@
-import { verifyToken } from './config/jwt';
+import { verifyToken } from '../../infrastructure/config/jwt';
 
 export const context = async ({ req }: { req: any }) => {
   const token = req.headers.authorization || '';
-  const user = token ? await verifyToken(token.replace('Bearer ', '')) : null;
+  const user = token ? verifyToken(token.replace('Bearer ', '')) : null;
   return { user };
 };
 

@@ -1,10 +1,10 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
-import { typeDefs } from './schema';
-import { resolvers } from './resolvers';
-import { context } from './context';
-import { formatError } from "./errors";
+import { typeDefs } from '../interfaces/graphql/schema';
+import { resolvers } from '../interfaces/graphql/resolvers';
+import { context } from '../interfaces/graphql/context';
+import { formatError } from "../interfaces/graphql/errors";
 
 const server = new ApolloServer({
   typeDefs,

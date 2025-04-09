@@ -1,6 +1,6 @@
-import { AuthService } from '../services/auth.service';
+import { createAuthService } from "../../../infrastructure/container";
 
-const authService = new AuthService();
+const authService = createAuthService();
 
 export const authResolvers = {
   Mutation: {
