@@ -25,6 +25,7 @@ model Article {
   comments  Comment[]
   likes     Like[]
   createdAt DateTime  @default(now())
+  updateAt DateTime 
 }
 
 model Comment {
@@ -43,5 +44,4 @@ model Like {
   userId    String
   article   Article  @relation(fields: [articleId], references: [id])
   articleId String
-  createdAt DateTime @default(now())
 }
