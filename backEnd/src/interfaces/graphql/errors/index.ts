@@ -1,7 +1,7 @@
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 
 import { AuthenticationError, AuthorizationError } from "../errors/auth.error";
-import { isOriginalErrorInstanceOf } from "../utils/errorHandler";
+import { isOriginalErrorInstanceOf } from "../../../utils/errorHandler";
 
 export const formatError = (
     formattedError: GraphQLFormattedError,

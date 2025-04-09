@@ -1,6 +1,5 @@
-import { GraphQLError } from 'graphql';
-import { MyContext } from '../context';
-import { AuthorizationError } from '../errors/auth.error';
+import { MyContext } from '../interfaces/graphql/context';
+import { AuthorizationError } from '../interfaces/graphql/errors/auth.error';
 
 export function requireAuth(context: MyContext) {
   if (!context.user) {

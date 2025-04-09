@@ -1,8 +1,8 @@
 import { MyContext } from '../context';
-import { UserService } from '../services/user.service';
-import { requireAuth } from '../utils/requireAuth';
+import { requireAuth } from '../../../utils/requireAuth';
+import { createUserService } from '../../../infrastructure/container';
 
-const userService = new UserService();
+const userService = createUserService();
 
 export const userResolvers = {
     Query: {

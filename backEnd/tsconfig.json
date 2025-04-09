@@ -3,6 +3,7 @@
       "target": "ES6",
       "module": "NodeNext",
       "strict": true,
+      "noImplicitAny": true,
       "outDir": "dist",
       "rootDir": "src",
       "esModuleInterop": true
