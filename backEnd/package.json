@@ -12,6 +12,7 @@
     "@apollo/datasource-rest": "^6.4.1",
     "@apollo/server": "^4.11.3",
     "@prisma/client": "^6.5.0",
+    "backend": "file:",
     "bcrypt": "^5.1.1",
     "graphql": "^16.10.0",
     "graphql-tag": "^2.12.6",
