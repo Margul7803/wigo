@@ -4,7 +4,8 @@ import { userResolvers } from './user.resolver';
 
 export const resolvers = {
   Query: {
-    ...userResolvers.Query
+    ...userResolvers.Query,
+    ...articleResolvers.Query,
   },
   Mutation: {
     ...authResolvers.Mutation,

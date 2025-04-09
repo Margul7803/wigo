@@ -12,6 +12,10 @@ export class ArticleService {
         return await this.articleRepository.findById(id);
     };
 
+    findMany = async (filters?: { authorId?: string; titleContains?: string; }, pagination?: { limit?: number; offset?: number; }) => {
+        return await this.articleRepository.findMany(filters, pagination);
+    };
+    
     createArticle = async (title: string, content: string, authorId: string) => {
         return await this.articleRepository.create(title, content, authorId);
     };

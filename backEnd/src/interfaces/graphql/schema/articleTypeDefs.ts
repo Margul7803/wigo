@@ -13,6 +13,12 @@ export const articleTypeDefs = gql`
 
   type Query {
     getArticle(id: String!): Article
+    getArticles(
+      authorId: String
+      titleContains: String
+      limit: Int
+      offset: Int
+    ): [Article]
   }
 
   type Mutation {

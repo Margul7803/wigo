@@ -5,6 +5,28 @@ import { createArticleService } from '../../../infrastructure/container';
 const articleService = createArticleService();
 
 export const articleResolvers = {
+    Query: {
+      getArticles: async (
+        _: unknown,
+        { authorId, titleContains, limit, offset }: { authorId?: string; titleContains?: string; limit?: number; offset?: number; },
+        context: MyContext
+      ) => {
+        requireAuth(context);
+
+        const articles = await articleService.findMany({ authorId, titleContains }, { limit, offset });
+        return articles;
+      },
+      getArticle: async (
+        _: unknown,
+        { id }: { id: string },
+        context: MyContext
+      ) => {
+        requireAuth(context);
+
+        const article = await articleService.findById(id);
+        return article;
+      },
+    },
     Mutation: {
       postArticle: async (
         _: unknown,
