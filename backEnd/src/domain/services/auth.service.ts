@@ -29,7 +29,7 @@ export class AuthService {
         throw new AuthenticationError('Password invalid');
       }
   
-      const token = generateToken(user.id, user.username)
+      const token = generateToken(user.id, user.username, user.email)
   
       return token;
   };

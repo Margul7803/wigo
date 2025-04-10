@@ -11,7 +11,6 @@ export const likeTypeDefs = gql`
   }
 
   type Mutation {
-    addLike(userId: String!, articleId: String!): Boolean
-    removeLike(userId: String!, articleId: String!): Boolean
+    toggleLike(userId: String!, articleId: String!): Boolean
   }
 `;

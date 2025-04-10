@@ -4,6 +4,7 @@ export const commentTypeDefs = gql`
   scalar Date
 
   type Comment {
+    id: String
     content: String
     authorId: String
     articleId: String

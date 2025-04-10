@@ -4,12 +4,17 @@ export const articleTypeDefs = gql`
   scalar Date
 
   type Article {
-    title: String
-    content: String
-    authorId: String
-    createdAt: Date
-    updatedAt: Date
+    id: String!
+    title: String!
+    content: String!
+    authorId: String!
+    createdAt: String!
+    updatedAt: String!
+    likesCount: Int!
+    commentsCount: Int!
+    comments: [Comment]!
   }
+
 
   type Query {
     getArticle(id: String!): Article

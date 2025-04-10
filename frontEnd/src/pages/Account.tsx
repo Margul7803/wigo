@@ -1,7 +1,6 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { FileText, Heart, Mail, User } from "lucide-react";
 
 const Account = () => {
@@ -65,16 +64,6 @@ const Account = () => {
             </div>
           </CardContent>
         </Card>
-        
-        <div className="flex justify-center pt-4">
-          <Button 
-            variant="outline" 
-            className="text-destructive hover:text-destructive"
-            onClick={() => alert("Fonctionnalité en cours de développement")}
-          >
-            Supprimer mon compte
-          </Button>
-        </div>
       </div>
     </div>
   );

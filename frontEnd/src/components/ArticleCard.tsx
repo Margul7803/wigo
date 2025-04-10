@@ -18,10 +18,19 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
   const navigate = useNavigate();
   const liked = isLiked(article.id);
   
-  const formattedDate = formatDistanceToNow(new Date(article.createdAt), { 
-    addSuffix: true,
-    locale: fr 
-  });
+  const timestamp = Number(article.createdAt);
+  const date = new Date(timestamp);
+
+  let formattedDate = "Date invalide";
+
+  if (!isNaN(date.getTime())) {
+    formattedDate = formatDistanceToNow(date, {
+      addSuffix: true,
+      locale: fr,
+    });
+  } else {
+    console.warn("Date invalide:", article.createdAt);
+  }
   
   const truncateContent = (content: string, maxLength: number = 150) => {
     if (content.length <= maxLength) return content;
@@ -67,7 +76,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             }}
           >
             <Heart className="h-4 w-4" fill={liked ? "currentColor" : "none"} />
-            <span>{article.likes.length}</span>
+            <span>{article.likesCount}</span>
           </Button>
           <Button 
             variant="ghost" 

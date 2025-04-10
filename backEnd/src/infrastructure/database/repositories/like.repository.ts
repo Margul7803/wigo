@@ -9,6 +9,18 @@ export class PrismaLikeRepository implements LikeRepository {
         });
     };
 
+    async findByUserAndArticle(userId: string, articleId: string): Promise<boolean> {
+        const like = await prisma.like.findUnique({ 
+            where: {
+                userId_articleId: {
+                    articleId,
+                    userId,
+                }
+            }
+        });
+        return like !== null;
+    }
+
     async create(userId: string, articleId: string): Promise<boolean> {
         try {
             await prisma.like.create({

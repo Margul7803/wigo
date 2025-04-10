@@ -17,17 +17,17 @@ export class LikeService {
         return await this.likeRepository.findByArticleId(articleId);
     };
     
-    addLike = async (userId: string, articleId: string) => {
+    toggleLike = async (userId: string, articleId: string) => {
         const article = await this.articleRepository.findById(articleId);
         if (!article) throw new Error('Article not found');
-
-        return await this.likeRepository.create(userId, articleId);
-    };
-
-    removeLike = async (userId: string, articleId: string) => {
-        const article = await this.articleRepository.findById(articleId);
-        if (!article) throw new Error('Article not found');
-
-        return await this.likeRepository.delete(userId, articleId);
+    
+        const existingLike = await this.likeRepository.findByUserAndArticle(userId, articleId);
+    
+        if (existingLike) {
+            await this.likeRepository.delete(userId, articleId);
+            return false
+        } 
+        await this.likeRepository.create(userId, articleId);
+        return true
     };
 }

@@ -18,7 +18,7 @@ export const likeResolvers = {
       },
     },
     Muration: {
-      addLike: async (
+      toggleLike: async (
         _: unknown,
         { articleId }: { articleId: string },
         context: MyContext
@@ -27,19 +27,7 @@ export const likeResolvers = {
         
         const userId = context.user!.id;
 
-        const user = await likeService.addLike(userId, articleId);
-        return user;
-      },
-      removeLike: async (
-        _: unknown,
-        { articleId }: { articleId: string },
-        context: MyContext
-      ) => {
-        requireAuth(context);
-        
-        const userId = context.user!.id;
-
-        const user = await likeService.removeLike(userId, articleId);
+        const user = await likeService.toggleLike(userId, articleId);
         return user;
       },
     },

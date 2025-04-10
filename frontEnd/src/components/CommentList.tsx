@@ -50,7 +50,7 @@ const CommentList = ({ articleId, comments }: CommentListProps) => {
       
       <div className="space-y-4">
         {comments.length > 0 ? (
-          comments
+          [...comments]
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((comment) => (
               <div key={comment.id} className="border rounded-lg p-4 animate-fadeIn">
