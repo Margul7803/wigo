@@ -40,9 +40,10 @@ model Comment {
 }
 
 model Like {
-  id        String  @id @default(cuid())
   user      User    @relation(fields: [userId], references: [id])
   userId    String
   article   Article @relation(fields: [articleId], references: [id])
   articleId String
+
+  @@id([userId, articleId])
 }
