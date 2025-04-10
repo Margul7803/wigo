@@ -22,14 +22,17 @@ export class PrismaArticleRepository implements ArticleRepository {
             where,
             include: {
                 likes: true,
+                comments: true,
             },
             take: limit,
             skip: offset,
         });
-        return articles.map((article) => ({
+        
+        return articles.map(article => ({
             ...article,
             likesCount: article.likes.length,
-        }));
+            commentsCount: article.comments.length,
+          }));
     }
 
     async create(title: string, content: string, authorId: string) {

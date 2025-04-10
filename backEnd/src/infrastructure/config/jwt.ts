@@ -5,8 +5,8 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY || 'secretKey';
 
 export type AuthenticatedUser = Pick<User, 'id' | 'username'>
 
-export const generateToken = (id: string, username: string): string => {
-  return jwt.sign({ id, username }, SECRET_KEY, { expiresIn: '2h' });
+export const generateToken = (id: string, username: string, email: string): string => {
+  return jwt.sign({ id, username, email }, SECRET_KEY, { expiresIn: '2h' });
 };
 
 export const verifyToken = (token: string) => {

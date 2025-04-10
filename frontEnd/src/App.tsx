@@ -21,7 +21,7 @@ import CreateArticle from "@/pages/CreateArticle";
 import { useAuth } from "@/contexts/AuthContext";
 import { ApolloProvider } from "@apollo/client";
 
-import { client } from "./apolloClient"; // Importer le client Apollo
+import client from "./apolloClient"; // Importer le client Apollo
 
 const queryClient = new QueryClient();
 

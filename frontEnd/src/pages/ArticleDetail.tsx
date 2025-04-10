@@ -11,10 +11,9 @@ import CommentList from "@/components/CommentList";
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getArticleById, getArticleComments, toggleLike, isLiked } = useArticles();
+  const { getArticleById, toggleLike, isLiked } = useArticles();
   
   const article = getArticleById(id || "");
-  const comments = id ? getArticleComments(id) : [];
   const liked = article ? isLiked(article.id) : false;
   
   if (!article) {
@@ -26,11 +25,20 @@ const ArticleDetail = () => {
     );
   }
   
-  const formattedDate = formatDistanceToNow(new Date(article.createdAt), { 
-    addSuffix: true,
-    locale: fr 
-  });
-  
+  const timestamp = Number(article.createdAt);
+  const date = new Date(timestamp);
+
+  let formattedDate = "Date invalide";
+
+  if (!isNaN(date.getTime())) {
+    formattedDate = formatDistanceToNow(date, {
+      addSuffix: true,
+      locale: fr,
+    });
+  } else {
+    console.warn("Date invalide:", article.createdAt);
+  }
+    
   return (
     <div className="max-w-3xl mx-auto animate-fadeIn">
       <div className="mb-6">
@@ -61,7 +69,7 @@ const ArticleDetail = () => {
             onClick={() => toggleLike(article.id)}
           >
             <Heart className="h-4 w-4" fill={liked ? "currentColor" : "none"} />
-            <span>{article.likes.length}</span>
+            <span>{article.likesCount}</span>
           </Button>
         </div>
         
@@ -73,7 +81,7 @@ const ArticleDetail = () => {
       </div>
       
       <div className="mt-12 pt-6 border-t">
-        <CommentList articleId={article.id} comments={comments} />
+        <CommentList articleId={article.id} comments={article.comments} />
       </div>
     </div>
   );

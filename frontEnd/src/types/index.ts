@@ -13,9 +13,10 @@ export interface Article {
   content: string;
   authorId: string;
   authorName: string;
-  createdAt: string;
-  likes: string[];
+  createdAt: number;
+  likesCount: number;
   commentsCount: number;
+  comments: Comment[];
 }
 
 export interface Comment {
@@ -24,5 +25,5 @@ export interface Comment {
   authorId: string;
   authorName: string;
   content: string;
-  createdAt: string;
+  createdAt: number;
 }
