@@ -11,11 +11,11 @@ export class PrismaUserRepository implements UserRepository {
 
     async create(username: string, hashedPassword: string, email: string) {
         return await prisma.user.create({
-        data: {
-            username,
-            password: hashedPassword,
-            email,
-        },
+            data: {
+                username,
+                password: hashedPassword,
+                email,
+            },
         });
     };
 }

@@ -1,4 +1,4 @@
-import { verifyToken } from '../../infrastructure/config/jwt';
+import { AuthenticatedUser, verifyToken } from '../../infrastructure/config/jwt';
 
 export const context = async ({ req }: { req: any }) => {
   const token = req.headers.authorization || '';
@@ -6,4 +6,6 @@ export const context = async ({ req }: { req: any }) => {
   return { user };
 };
 
-export type MyContext = Awaited<ReturnType<typeof context>>;
+export type MyContext = {
+  user: AuthenticatedUser | null;
+};
