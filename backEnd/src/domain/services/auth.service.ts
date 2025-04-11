@@ -12,7 +12,9 @@ export class AuthService {
   }
   
   async registerUser(username: string, password: string, email: string) {
-    return await this.userRepository.create(username, password, email)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    return await this.userRepository.create(username, hashedPassword, email)
   };
 
   async authenticateUser(username: string, password: string) {
@@ -27,7 +29,7 @@ export class AuthService {
         throw new AuthenticationError('Password invalid');
       }
   
-      const token = generateToken(user.id, user.username)
+      const token = generateToken(user.id, user.username, user.email)
   
       return token;
   };
