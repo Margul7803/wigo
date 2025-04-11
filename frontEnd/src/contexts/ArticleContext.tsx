@@ -14,7 +14,7 @@ interface ArticleContextType {
   isLiked: (articleId: string) => boolean;
   createArticle: (title: string, content: string) => Promise<Article>;
   deleteArticle: (articleId: string) => Promise<boolean>;
-  editArticle: (title: string, content: string) => Promise<Article>;
+  editArticle: (title: string, content: string, articleId: string) => Promise<Article>;
 }
 
 const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
@@ -124,14 +124,14 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const editArticle = async (title: string, content: string): Promise<Article> => {
+  const editArticle = async (title: string, content: string, articleId: string): Promise<Article> => {
     if (!user) {
       toast.error("Vous devez être connecté pour créer un article");
       throw new Error("User not authenticated");
     }
 
     const { data } = await editArticleMutation({
-      variables: { title, content },
+      variables: { title, content, articleId },
       refetchQueries: [{ query: GET_ARTICLES }],
     });
     if (data?.postArticle) {
