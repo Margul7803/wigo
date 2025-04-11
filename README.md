@@ -71,3 +71,7 @@ This project is built with:
 - TypeScript
 - GraphQl
 - Prisma
+
+
+## Démo Vidéo du front:
+[Regarder la démo vidéo](https://youtu.be/YPr1Robnygo)
