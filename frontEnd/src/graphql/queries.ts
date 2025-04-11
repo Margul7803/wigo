@@ -11,12 +11,14 @@ export const GET_ARTICLES = gql`
             updatedAt
             likesCount
             commentsCount
+            authorName
             comments {
                 id
                 content
                 authorId
                 articleId
                 createdAt
+                userName
             }
             likes {
                 userId
@@ -44,6 +46,7 @@ export const GET_COMMENTS = gql`
         authorId
         articleId
         createdAt
+        userName
     }
 }
 `;

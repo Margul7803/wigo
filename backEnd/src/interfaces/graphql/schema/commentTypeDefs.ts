@@ -7,6 +7,7 @@ export const commentTypeDefs = gql`
     id: String
     content: String
     authorId: String
+    userName: String
     articleId: String
     createdAt: Date
   }
