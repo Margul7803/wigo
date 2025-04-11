@@ -13,6 +13,7 @@ export const articleTypeDefs = gql`
     likesCount: Int!
     commentsCount: Int!
     comments: [Comment]!
+    likes: [Like]!
   }
 
 

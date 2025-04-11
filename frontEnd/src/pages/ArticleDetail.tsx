@@ -2,16 +2,19 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, ArrowLeft, Clock } from "lucide-react";
+import { Heart, ArrowLeft, Clock, Trash, Pencil } from "lucide-react";
 import { useArticles } from "@/contexts/ArticleContext";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import CommentList from "@/components/CommentList";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  
   const navigate = useNavigate();
-  const { getArticleById, toggleLike, isLiked } = useArticles();
+  const { getArticleById, toggleLike, isLiked, deleteArticle } = useArticles();
   
   const article = getArticleById(id || "");
   const liked = article ? isLiked(article.id) : false;
@@ -38,7 +41,17 @@ const ArticleDetail = () => {
   } else {
     console.warn("Date invalide:", article.createdAt);
   }
-    
+  
+  const handleDelete = async (articleId: string) => {
+    try {
+      await deleteArticle(articleId);
+      
+      navigate("/");
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto animate-fadeIn">
       <div className="mb-6">
@@ -55,22 +68,42 @@ const ArticleDetail = () => {
         
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center text-sm text-muted-foreground">
-            <span className="mr-3">Par {article.authorName}</span>
+            <span className="mr-3">Par {article.authorId}</span>
             <span className="flex items-center">
               <Clock className="h-3 w-3 mr-1" />
               {formattedDate}
             </span>
           </div>
-          
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className={`flex items-center gap-2 ${liked ? "text-red-500 dark:text-red-400" : ""}`}
-            onClick={() => toggleLike(article.id)}
-          >
-            <Heart className="h-4 w-4" fill={liked ? "currentColor" : "none"} />
-            <span>{article.likesCount}</span>
-          </Button>
+          <div className="flex justify-end items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className={`flex items-center gap-2 ${liked ? "text-red-500 dark:text-red-400" : ""}`}
+              onClick={() => toggleLike(article.id)}
+            >
+              <Heart className="h-4 w-4" fill={liked ? "currentColor" : "none"} />
+              <span>{article.likesCount}</span>
+            </Button>
+
+            {article.authorId === user.id && (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleDelete(article.id)}
+                >
+                  <Trash className="text-red-700 dark:text-red-700" />
+                </Button>
+                <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => toggleLike(article.id)} // TODO use editArticle with a custom hook
+              >
+                  <Pencil className="text-blue-500 dark:text-blue-400" />
+              </Button>
+            </>
+            )}
+          </div>
         </div>
         
         <div className="prose dark:prose-invert max-w-none">
@@ -86,5 +119,6 @@ const ArticleDetail = () => {
     </div>
   );
 };
+
 
 export default ArticleDetail;

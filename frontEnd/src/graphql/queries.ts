@@ -18,6 +18,9 @@ export const GET_ARTICLES = gql`
                 articleId
                 createdAt
             }
+            likes {
+                userId
+            }
     }
 }
 `;
