@@ -22,7 +22,7 @@ const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
 export const ArticleProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
 
-  const { data: articlesData, fetchMore } = useQuery(GET_ARTICLES, {
+  const { data: articlesData, fetchMore, refetch } = useQuery(GET_ARTICLES, {
     variables: { offset: 0, limit: 10 },
     fetchPolicy: "cache-and-network",
   });
@@ -46,11 +46,12 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
 
     toggleLikeMutation({
       variables: { articleId, userId: user.id },
-      refetchQueries: [{ query: GET_ARTICLES }],
       onCompleted: (data) => {
         if (data?.toggleLike) {
+          refetch();
           toast.success("Like ajouté !");
         } else {
+          refetch();
           toast.success("Like retiré !");
         }
       },
@@ -78,8 +79,8 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
 
     addCommentMutation({
       variables: { articleId, content, userId: user.id },
-      refetchQueries: [{ query: GET_ARTICLES }],
       onCompleted: () => {
+        refetch();
         toast.success("Commentaire ajouté");
       },
     });
@@ -93,10 +94,10 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
 
     const { data } = await createArticleMutation({
       variables: { title, content, authorId: user.id },
-      refetchQueries: [{ query: GET_ARTICLES }],
     });
     if (data?.postArticle) {
       toast.success("Article créé avec succès");
+      refetch();
       return data.postArticle;
     } else {
       toast.error("Une erreur est survenue lors de la création de l'article");
@@ -112,10 +113,10 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
 
     const { data } = await deleteArticleMutation({
       variables: { articleId },
-      refetchQueries: [{ query: GET_ARTICLES }],
     });
     if (data?.deleteArticle) {
       toast.success("Article supprimer avec succès");
+      refetch();
       return true;
     } else {
       toast.error("Une erreur est survenue lors de la supression de l'article");
