@@ -1,5 +1,4 @@
-
-import { useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, ArrowLeft, Clock, Trash, Pencil } from "lucide-react";
@@ -8,17 +7,20 @@ import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import CommentList from "@/components/CommentList";
 import { useAuth } from "@/contexts/AuthContext";
+import CreateArticleForm from "@/components/CreateArticleForm";
+import { Article } from "@/types";
 
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  
   const navigate = useNavigate();
-  const { getArticleById, toggleLike, isLiked, deleteArticle } = useArticles();
+  const { getArticleById, toggleLike, isLiked, deleteArticle, editArticle } = useArticles();
+  
+  const [isEditing, setIsEditing] = useState(false);
   
   const article = getArticleById(id || "");
   const liked = article ? isLiked(article.id) : false;
-  
+
   if (!article) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
@@ -27,30 +29,54 @@ const ArticleDetail = () => {
       </div>
     );
   }
-  
+
   const timestamp = Number(article.createdAt);
   const date = new Date(timestamp);
 
-  let formattedDate = "Date invalide";
+  const formattedDate = !isNaN(date.getTime())
+    ? formatDistanceToNow(date, { addSuffix: true, locale: fr })
+    : "Date invalide";
 
-  if (!isNaN(date.getTime())) {
-    formattedDate = formatDistanceToNow(date, {
-      addSuffix: true,
-      locale: fr,
-    });
-  } else {
-    console.warn("Date invalide:", article.createdAt);
-  }
-  
   const handleDelete = async (articleId: string) => {
     try {
       await deleteArticle(articleId);
-      
       navigate("/");
     } catch (error) {
-      console.log(error)
+      console.error(error);
     }
   };
+
+  const handleEdit = async (id: string, title: string, content: string) => {
+    try {
+      await editArticle(title, content, id);
+      setIsEditing(false);
+      navigate('/')
+      return 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <div className="max-w-3xl mx-auto py-8 animate-fadeIn">
+        <Button
+          variant="ghost"
+          className="mb-4 -ml-2 flex items-center gap-1"
+          onClick={() => setIsEditing(false)}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Annuler
+        </Button>
+        <CreateArticleForm
+          initialTitle={article.title}
+          initialContent={article.content}
+          onSubmitArticle={(title, content) => handleEdit(article.id, title, content)}
+          submitLabel="Modifier"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto animate-fadeIn">
@@ -63,9 +89,9 @@ const ArticleDetail = () => {
           <ArrowLeft className="h-4 w-4" />
           Retour
         </Button>
-        
+
         <h1 className="text-3xl font-bold mb-2">{article.title}</h1>
-        
+
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center text-sm text-muted-foreground">
             <span className="mr-3">Par {article.authorId}</span>
@@ -95,30 +121,29 @@ const ArticleDetail = () => {
                   <Trash className="text-red-700 dark:text-red-700" />
                 </Button>
                 <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => toggleLike(article.id)} // TODO use editArticle with a custom hook
-              >
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsEditing(true)}
+                >
                   <Pencil className="text-blue-500 dark:text-blue-400" />
-              </Button>
-            </>
+                </Button>
+              </>
             )}
           </div>
         </div>
-        
+
         <div className="prose dark:prose-invert max-w-none">
           {article.content.split("\n").map((paragraph, index) => (
             <p key={index} className="mb-4">{paragraph}</p>
           ))}
         </div>
       </div>
-      
+
       <div className="mt-12 pt-6 border-t">
         <CommentList articleId={article.id} comments={article.comments} />
       </div>
     </div>
   );
 };
-
 
 export default ArticleDetail;

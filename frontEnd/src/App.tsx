@@ -22,6 +22,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ApolloProvider } from "@apollo/client";
 
 import client from "./apolloClient"; // Importer le client Apollo
+import UpdateArticle from "./pages/UpdateArticle";
 
 const queryClient = new QueryClient();
 
@@ -98,6 +99,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <CreateArticle />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/update-article"
+        element={
+          <ProtectedRoute>
+            <UpdateArticle />
           </ProtectedRoute>
         }
       />

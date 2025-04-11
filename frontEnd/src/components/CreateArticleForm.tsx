@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useArticles } from "@/contexts/ArticleContext";
@@ -9,22 +8,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Article } from "@/types";
 
 interface CreateArticleFormProps {
+  initialTitle?: string;
+  initialContent?: string;
+  onSubmitArticle?: (title: string, content: string) => Promise<Article> | Promise<void>;
   onSuccess?: () => void;
+  submitLabel?: string;
 }
 
-const CreateArticleForm = ({ onSuccess }: CreateArticleFormProps) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+const CreateArticleForm = ({
+  initialTitle = "",
+  initialContent = "",
+  onSubmitArticle,
+  onSuccess,
+  submitLabel = "Publier",
+}: CreateArticleFormProps) => {
+  const [title, setTitle] = useState(initialTitle);
+  const [content, setContent] = useState(initialContent);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
   const { createArticle } = useArticles();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setTitle(initialTitle);
+    setContent(initialContent);
+  }, [initialTitle, initialContent]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!title.trim() || !content.trim()) {
       toast.error("Veuillez remplir tous les champs");
       return;
@@ -33,16 +48,20 @@ const CreateArticleForm = ({ onSuccess }: CreateArticleFormProps) => {
     setIsSubmitting(true);
 
     try {
-      await createArticle(title, content);
-      
+      if (onSubmitArticle) {
+        await onSubmitArticle(title, content); // Pour l'édition
+      } else {
+        await createArticle(title, content); // Création
+      }
+
       if (onSuccess) {
         onSuccess();
       }
-      
-      toast.success("Article publié avec succès");
+
+      toast.success(`Article ${onSubmitArticle ? "modifié" : "publié"} avec succès`);
       navigate("/");
     } catch (error) {
-      toast.error("Une erreur est survenue lors de la publication");
+      toast.error("Une erreur est survenue");
     } finally {
       setIsSubmitting(false);
     }
@@ -52,7 +71,7 @@ const CreateArticleForm = ({ onSuccess }: CreateArticleFormProps) => {
     <Card className="w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit}>
         <CardHeader>
-          <CardTitle>Créer un nouvel article</CardTitle>
+          <CardTitle>{onSubmitArticle ? "Modifier l’article" : "Créer un nouvel article"}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -91,7 +110,7 @@ const CreateArticleForm = ({ onSuccess }: CreateArticleFormProps) => {
             Annuler
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Publication..." : "Publier"}
+            {isSubmitting ? "Envoi..." : submitLabel}
           </Button>
         </CardFooter>
       </form>
