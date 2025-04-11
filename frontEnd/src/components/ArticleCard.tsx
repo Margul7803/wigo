@@ -49,7 +49,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
           </CardTitle>
         </div>
         <div className="flex items-center text-sm text-muted-foreground">
-          <span className="mr-2">{article.authorName}</span>
+          <span className="mr-2">{article.authorId}</span>
           <span className="flex items-center">
             <Clock className="h-3 w-3 mr-1" />
             {formattedDate}

@@ -55,7 +55,7 @@ const CommentList = ({ articleId, comments }: CommentListProps) => {
             .map((comment) => (
               <div key={comment.id} className="border rounded-lg p-4 animate-fadeIn">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="font-medium">{comment.authorName}</span>
+                  <span className="font-medium">{comment.authorId}</span>
                   <span className="text-xs text-muted-foreground">
                     {formatDistanceToNow(new Date(comment.createdAt), {
                       addSuffix: true,

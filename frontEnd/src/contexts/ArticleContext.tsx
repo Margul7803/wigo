@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_ARTICLES } from "../graphql/queries";
-import { TOGGLE_LIKE, ADD_COMMENT, CREATE_ARTICLE } from "../graphql/mutations";
+import { TOGGLE_LIKE, ADD_COMMENT, CREATE_ARTICLE, DELETE_ARTICLE, EDIT_ARTICLE } from "../graphql/mutations";
 import { Article, Comment } from "@/types";
 
 interface ArticleContextType {
@@ -13,6 +13,8 @@ interface ArticleContextType {
   addComment: (articleId: string, content: string) => void;
   isLiked: (articleId: string) => boolean;
   createArticle: (title: string, content: string) => Promise<Article>;
+  deleteArticle: (articleId: string) => Promise<boolean>;
+  editArticle: (title: string, content: string) => Promise<Article>;
 }
 
 const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
@@ -28,6 +30,9 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
   const [addCommentMutation] = useMutation(ADD_COMMENT);
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE);
   const [createArticleMutation] = useMutation(CREATE_ARTICLE);
+  const [deleteArticleMutation] = useMutation(DELETE_ARTICLE);
+  const [editArticleMutation] = useMutation(EDIT_ARTICLE);
+
 
   const getArticleById = (id: string) => {
     return articlesData?.getArticles.find((article: Article) => article.id === id);
@@ -43,7 +48,6 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
       variables: { articleId, userId: user.id },
       refetchQueries: [{ query: GET_ARTICLES }],
       onCompleted: (data) => {
-        console.log(data)
         if (data?.toggleLike) {
           toast.success("Like ajouté !");
         } else {
@@ -56,8 +60,9 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
   const isLiked = (articleId: string): boolean => {
     if (!user) return false;
 
-    const article = articlesData?.getArticles.find((a: Article) => a.id === articleId); // TODO fix me
-    return article?.likedBy?.includes(user.id) ?? false;
+    const article = articlesData?.getArticles.find((a: Article) => a.id === articleId);
+
+    return article.likes.some((like) => like.userId === user.id) ?? false;
   };
 
   const addComment = (articleId: string, content: string) => {
@@ -99,6 +104,44 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const deleteArticle = async (articleId: string): Promise<boolean> => {
+    if (!user) {
+      toast.error("Vous devez être connecté pour créer un article");
+      throw new Error("User not authenticated");
+    }
+
+    const { data } = await deleteArticleMutation({
+      variables: { articleId },
+      refetchQueries: [{ query: GET_ARTICLES }],
+    });
+    if (data?.deleteArticle) {
+      toast.success("Article supprimer avec succès");
+      return true;
+    } else {
+      toast.error("Une erreur est survenue lors de la supression de l'article");
+      throw new Error("Error creating article");
+    }
+  };
+
+  const editArticle = async (title: string, content: string): Promise<Article> => {
+    if (!user) {
+      toast.error("Vous devez être connecté pour créer un article");
+      throw new Error("User not authenticated");
+    }
+
+    const { data } = await editArticleMutation({
+      variables: { title, content },
+      refetchQueries: [{ query: GET_ARTICLES }],
+    });
+    if (data?.postArticle) {
+      toast.success("Article modifier avec succès");
+      return data.postArticle;
+    } else {
+      toast.error("Une erreur est survenue lors de la création de l'article");
+      throw new Error("Error creating article");
+    }
+  };
+
   return (
     <ArticleContext.Provider
       value={{
@@ -108,12 +151,16 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
         addComment,
         isLiked,
         createArticle,
+        deleteArticle,
+        editArticle,
       }}
     >
       {children}
     </ArticleContext.Provider>
   );
 };
+
+
 
 export const useArticles = () => {
   const context = useContext(ArticleContext);

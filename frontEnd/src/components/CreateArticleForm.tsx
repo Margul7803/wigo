@@ -35,7 +35,6 @@ const CreateArticleForm = ({ onSuccess }: CreateArticleFormProps) => {
     try {
       await createArticle(title, content);
       
-      // Call the onSuccess callback if provided
       if (onSuccess) {
         onSuccess();
       }

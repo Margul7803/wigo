@@ -1,14 +1,11 @@
-// src/graphql/mutations.ts
 import { gql } from "@apollo/client";
 
-// Mutation pour login
 export const LOGIN_USER = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password)
   }
 `;
 
-// Mutation pour register
 export const REGISTER_USER = gql`
   mutation Register($username: String!, $email: String!, $password: String!) {
     register(username: $username, password: $password, email: $email)
@@ -26,6 +23,21 @@ export const CREATE_ARTICLE = gql`
       updatedAt
     }
 }
+`;
+
+export const EDIT_ARTICLE = gql`
+  mutation Mutation($articleId: String!, $content: String!, $title: String!) {
+    updateArticle(id: $articleId, content: $content, title: $title) {
+      title
+      content
+    }
+  }
+`;
+
+export const DELETE_ARTICLE = gql`
+  mutation DeleteArticle($articleId: String!) {
+    deleteArticle(id: $articleId)
+  }
 `;
 
 export const ADD_COMMENT = gql`
