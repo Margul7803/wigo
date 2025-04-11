@@ -8,6 +8,7 @@ export const articleTypeDefs = gql`
     title: String!
     content: String!
     authorId: String!
+    authorName: String!
     createdAt: String!
     updatedAt: String!
     likesCount: Int!

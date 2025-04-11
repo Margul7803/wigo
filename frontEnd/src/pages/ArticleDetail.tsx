@@ -94,7 +94,7 @@ const ArticleDetail = () => {
 
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center text-sm text-muted-foreground">
-            <span className="mr-3">Par {article.authorId}</span>
+            <span className="mr-3">Par {article.authorName}</span>
             <span className="flex items-center">
               <Clock className="h-3 w-3 mr-1" />
               {formattedDate}

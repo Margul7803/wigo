@@ -64,13 +64,6 @@ const Login = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Connexion en cours..." : "Se connecter"}
             </Button>
-            
-            {/* Demo credentials helper */}
-            <div className="text-center text-sm text-muted-foreground mt-2">
-              <p>Identifiants de démonstration:</p>
-              <p><strong>Email:</strong> demo@example.com</p>
-              <p><strong>Mot de passe:</strong> password</p>
-            </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">

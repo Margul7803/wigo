@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         toast.success("Inscription réussie!");
         return true;
       } else {
-        toast.error("Une erreur est survenue lors de l'inscription");
+        toast.error("Email ou username déjà utilisé");
         return false;
       }
     } catch (error) {
